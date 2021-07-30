@@ -1,0 +1,31 @@
+import os
+import time
+
+print("Enter dir path")
+user_path = input()
+print("Enter a string for search")
+user_string = input()
+
+
+def getDirList(user_path: str) -> list:
+    return os.listdir(user_path)
+
+
+def bruteFiles(filesList: list, user_string, path):
+    curpath = path
+    bool = False
+    for temp in filesList:
+        if os.path.isdir(curpath + f"\\{temp}"):
+            bruteFiles(getDirList(curpath + f"\\{temp}"), user_string, curpath + f"\\{temp}")
+        elif os.path.isfile(curpath + f"\\{temp}"):
+            if os.path.splitext(curpath + f"\\{temp}")[1] =='.txt':
+                    tempFile = open(curpath + f"\\{temp}", 'rt')
+                    str = tempFile.read()
+                    if str.__contains__(user_string):
+                         print(curpath + f"\\{temp}" + " " + temp)
+                         bool=True
+    return bool
+
+time_start = time.time()
+bruteFiles(getDirList(user_path), user_string, user_path)
+print(time.time()-time_start)
